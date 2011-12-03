@@ -15,6 +15,10 @@ CREATE TABLE ClimateGrid (
 --CHECK (Col > 0 AND Col < 360)
 --CHECK (Year > 0)
 
+-- Create indices
+CREATE INDEX GridIndex ON ClimateGrid (Row, Col);
+CREATE INDEX DateIndex ON ClimateGrid (Year, Month, Day);
+
 -- Create test data
 INSERT INTO ClimateGrid (Row, Col, Precip, Min_T, Max_T, Seq, Year, Month, Day)
     VALUES (180, 180, 3.0, -5, 100, 180 * 720 + 180, 1998, 3, 5);
@@ -22,4 +26,3 @@ INSERT INTO ClimateGrid (Row, Col, Precip, Min_T, Max_T, Seq, Year, Month, Day)
 -- Insert Data template
 --INSERT INTO ClimateGrid (Row, Col, Precip, Min_T, Max_T, Seq, Year, Month, Day)
     --VALUES ();
-
