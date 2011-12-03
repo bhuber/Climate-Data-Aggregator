@@ -15,6 +15,13 @@ def import_file(filename1, filename2, filename3):
 	fb = open(filename2, 'r').read().split()
 	fc = open(filename3, 'r').read().split()
 	
+	year = int(filename1.split(".")[-2][:4])
+	month = int(filename1.split(".")[-2][4:6])
+	day = int(filename1.split(".")[-2][6:8])
+	start = datetime.datetime(year, 1, 1)
+	now = datetime.datetime(year, month, day)
+	doy = (now-start).days
+	
 	#Docs for pysqlite: http://pysqlite.googlecode.com/svn/doc/sqlite3.html
 
 	create_statement = """
@@ -54,33 +61,33 @@ def import_file(filename1, filename2, filename3):
 			return (end.month, end.day)
 	
 	#connect can take a file path for a db file, or ':memory:' to create a db in RAM
-	conn = sqlite3.connect(':memory:')
+	conn = sqlite3.connect('./'+str(year)+str(month)+str(day)+".sql")
 	c = conn.cursor()
 	c.execute(create_statement)
 	
-	year = int(filename1.split(".")[-2][:4])
-	month = int(filename1.split(".")[-2][4:6])
-	day = int(filename1.split(".")[-2][6:8])
-	start = datetime.datetime(year, 1, 1)
-	now = datetime.datetime(year, month, day)
-	doy = (now-start).days
+	def insert_sql(fa, fb, fc, year, month, day, doy, c):
+		for i in xrange(len(fa)):
+			if -999 in (fa[i],fb[i],fc[i]):
+				continue
+			row, col = int(i/360),i%720
+			precip = None
+			min_temp = None
+			max_temp = None
+			precip = fa[i]
+			min_temp = fb[i]
+			max_temp = fc[i]
+			insert_data = (row, col, precip, min_temp, max_temp, i, year, month, day)
+			c.execute(insert_statement, insert_data)
 	
-	for i in xrange(len(fa)):
-		row, col = int(i/360),i%720
-		precip = None
-		min_temp = None
-		max_temp = None
-		precip = fa[i]
-		min_temp = fb[i]
-		max_temp = fc[i]
-		insert_data = (row, col, precip, min_temp, max_temp, i, year, month, day)
-		c.execute(insert_statement, insert_data)
+	insert_sql(fa, fb, fc, year, month, day, doy, c)
 	
 	print "Success!"
 	
-	print(c.execute("SELECT * FROM ClimateGrid WHERE Row = 80 AND Col = 135").fetchall())
+	#print(c.execute("SELECT * FROM ClimateGrid WHERE Row = 80 AND Col = 135").fetchall())
 
+	conn.commit()
 	conn.close()
+
 if __name__=="__main__":
 	if len(sys.argv)<4:
 		print "Not enough arguments!"
