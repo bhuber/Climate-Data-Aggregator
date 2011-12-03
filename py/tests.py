@@ -23,7 +23,9 @@ insert_statement = """
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
 class ClimateGridInterface:
-    """Defines some interface methods for our ClimateGrid table
+    """
+    Defines some interface methods for our ClimateGrid table
+    Work in progress, do not use as is.
     """
 
     nrows = 360
@@ -54,7 +56,6 @@ class Helper:
     @staticmethod
     def index_to_sequence(row, col):
         """
-        Work in progress, do not use as is.
         Converts a (row, col) index to a sequence number
         """
         return col * 720 + row
