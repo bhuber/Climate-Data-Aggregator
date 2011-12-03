@@ -1,4 +1,6 @@
 #Add things to ignore here.  See `git help ignore` for details.
 
 *.pyc
+.*.swp
+*.sqlite
 
