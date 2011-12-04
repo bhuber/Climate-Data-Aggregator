@@ -242,7 +242,16 @@
             $.ajax(url, {
                 headers: { 'X-CloudMine-ApiKey': opts.api_key },
                 dataType: 'json',
-                success: callback
+                success: function(data){
+                    if(data.success && !data.success.forEach){
+                        merge(data.success, {forEach: forEach});
+                    }
+                    if(data.error && !data.error.forEach){
+                        merge(data.error, {forEach: forEach});
+                    }
+
+                    callback(data);
+                }
             });
         },
 
