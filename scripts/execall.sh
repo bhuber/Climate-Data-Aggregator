@@ -16,5 +16,8 @@ mins="min"
 
 for i in $d
 do
-	python ../py/dataimport.py "$A$pres${i:3}" "$B$maxs${i:3}" "$C$mins${i:3}"
+	for j in $i
+	do
+		python ../py/dataimport.py "$A$pres$i${j:3}" "$B$maxs$i${j:3}" "$C$mins$i${j:3}"
+	done
 done
