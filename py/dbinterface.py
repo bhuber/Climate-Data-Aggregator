@@ -17,7 +17,12 @@ class ClimateGridInterface:
 		self.conn = sqlite3.connect("./testdb.sqlite")
 		self.curs = self.conn.cursor()
 		#TODO: test for existence of our db, create only if necessary
-		self.curs.execute(self._create_statement)
+		#Using try/except.
+		try:
+			self.curs.execute(self._create_statement)
+		except sqlite3.OperationError:
+			# table already exists, we don't need to do anything
+			pass
 
 	def __del__(self):
 		self.conn.commit()
