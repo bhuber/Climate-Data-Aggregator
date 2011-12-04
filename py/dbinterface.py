@@ -50,6 +50,10 @@ class ClimateGridInterface:
 		INSERT INTO ClimateGrid (Row, Col, Precip, Min_T, Max_T, Seq, Date)
 		VALUES (?, ?, ?, ?, ?, ?, ?)"""
 
+	# TODO: implement this
+	_retrieve_statement = """
+		SELECT * FROM ClimateGrid WHERE """
+
 	def round_to_nearest_half(self, x):
 		return round(2 * x) / 2
 
@@ -91,6 +95,13 @@ class ClimateGridInterface:
 
 	def insert_row(self, data):
 	   self.curs.execute(self._insert_statement, data)
+	   
+	def retrieve_row(self, data):
+		#Uncomment this when this is done
+		#result = self.curs.execute(self._retrieve_statement, data)
+		print data
+		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
+		return result
 	
 	
 
