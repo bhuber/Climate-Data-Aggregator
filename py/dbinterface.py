@@ -15,6 +15,7 @@ class ClimateGridInterface:
 	def __init__(self):
 	#Docs for pysqlite: http://pysqlite.googlecode.com/svn/doc/sqlite3.html
 		self.conn = sqlite3.connect("./testdb.sqlite")
+		self.conn.isolation_level = "DEFERRED"
 		self.curs = self.conn.cursor()
 		#TODO: test for existence of our db, create only if necessary
 		#Using try/except.
