@@ -1,5 +1,14 @@
 We're working on the rhok.org project for the worldbank
 
+Project manager:
+Hrishi Patel
+hrishi.p.patel@gmail.com
+
+Github Project Admin
+Bennet Huber
+Azavea
+bhuber@azavea.com
+
 Status as of 9:00 AM 12/4/2011
 
  - Can import data into sqlite db, but only one file at a time and it needs to be unzipped first
