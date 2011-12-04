@@ -18,6 +18,6 @@ for i in $d
 do
 	for j in $i
 	do
-		python ../py/dataimport.py "$A$pres$i${j:3}" "$B$maxs$i${j:3}" "$C$mins$i${j:3}"
+		python ../py/dataimport.py "$i$pre${j:3}" "$i$max${j:3}" "$i$min${j:3}"
 	done
 done
