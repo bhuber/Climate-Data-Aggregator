@@ -27,9 +27,9 @@ def import_file(filename1, filename2, filename3):
 	cgi = ClimateGridInterface()
 	cgi.import_files(fa, fb, fc, year, month, day, doy)
 	
-	print "Success!"
+	print("Imported %(year)s/%(month)s/%(day)s" % { 'year': year, 'month': month, 'day': day })
 	
-	print(cgi.curs.execute("SELECT * FROM ClimateGrid WHERE Row = 80 AND Col = 135").fetchall())
+	#print(cgi.curs.execute("SELECT * FROM ClimateGrid WHERE Row = 80 AND Col = 135").fetchall())
 
 if __name__=="__main__":
 	if len(sys.argv)<4:

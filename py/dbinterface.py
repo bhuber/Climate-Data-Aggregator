@@ -20,7 +20,7 @@ class ClimateGridInterface:
 		#Using try/except.
 		try:
 			self.curs.execute(self._create_statement)
-		except sqlite3.OperationError:
+		except sqlite3.OperationalError:
 			# table already exists, we don't need to do anything
 			pass
 
