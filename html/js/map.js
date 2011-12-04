@@ -35,7 +35,7 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
         function geoToRect(lonlat){
             return {
                 col: Math.floor(lonlat.lon*2) + 360,
-                row: Math.floor(-lonlat.lat*2) + 180,
+                row: Math.floor(-lonlat.lat*2) + 180
             }
         }
 
@@ -46,7 +46,10 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
 
         var q = '[row=' + rect.row + ',col=' + rect.col + ']';
         cloudmine.search(q, function(data){
-            $("#results").html(JSON.stringify(data.success));
+            $("#results").html("");
+            data.success.forEach(function(key, value){
+                $("#results").append("<div>" + JSON.stringify(value) + "</div>");
+            });
         });
     }
     
@@ -63,7 +66,7 @@ function init(){
                                             {layers: "landsat7"});
     
     jpl_wms.setVisibility(false);
-    
+
     map.addLayers([ol_wms, jpl_wms]);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     // map.setCenter(new OpenLayers.LonLat(0, 0), 0);
