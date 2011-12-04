@@ -52,7 +52,7 @@ class ClimateGridInterface:
 
 	# TODO: implement this
 	_retrieve_statement = """
-		SELECT * FROM ClimateGrid WHERE """
+		SELECT * FROM ClimateGrid WHERE Row = ? AND Col = ?"""
 
 	def round_to_nearest_half(self, x):
 		return round(2 * x) / 2
@@ -66,11 +66,11 @@ class ClimateGridInterface:
 			return None
 		lat = self.round_to_nearest_half(lat)
 		lng = self.round_to_nearest_half(lng)
-		row = (lat + 90) * _nrows / 180
-		col = (lng + 180) * _ncols / 360
-		row = int(row) % _nrows
-		col = int(col) % _ncols
-		return (row, col)
+		row = (90 - lat) * self._nrows / 180
+		col = (lng + 180) * self._ncols / 360
+		row = int(2 * row) % self._nrows
+		col = int(2 * col) % self._ncols
+		return (col, row)
 
 	def index_to_sequence(self, row, col):
 		"""
@@ -82,7 +82,7 @@ class ClimateGridInterface:
 		for i in xrange(len(fa)):
 			if -999 in (fa[i],fb[i],fc[i]):
 				continue
-			row, col = int(i/360),i%720
+			row, col = int(i / 720), i % 720
 			precip = None
 			min_temp = None
 			max_temp = None
@@ -97,11 +97,20 @@ class ClimateGridInterface:
 	   self.curs.execute(self._insert_statement, data)
 	   
 	def retrieve_row(self, data):
+		"""
+		Gets all entries for a given location
+		data is a dictionary with x and y
+		"""
 		#Uncomment this when this is done
-		#result = self.curs.execute(self._retrieve_statement, data)
-		print data
-		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
-		return result
+		#print(data)
+		lat = data['y']
+		lng = data['x']
+		params = self.latlng_to_rowcol(lat, lng)
+		#print(params)
+		result = self.curs.execute(self._retrieve_statement, params)
+		#print(result.fetchall())
+#		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
+		return result.fetchall()
 	
 	
 
