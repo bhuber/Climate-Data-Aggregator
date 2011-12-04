@@ -10,14 +10,18 @@ C="$3"
 d=`ls $A`
 
 pres="pre"
-maxs="max"
-mins="min"
+maxs="tmax"
+mins="tmin"
 
 
 for i in $d
 do
-	for j in $i
+	#echo $i
+	for j in `ls $A$i` 
 	do
-		python ../py/dataimport.py "$A$pres$i${j:3}" "$B$maxs$i${j:3}" "$C$mins$i${j:3}"
+		#echo $j
+		suffix=${j:(-12)}
+		#echo $suffix
+		python ../py/dataimport.py "$A$i/$pres.$suffix" "$A$i/$maxs.$suffix" "$A$i/$mins.$suffix"
 	done
 done
