@@ -74,9 +74,9 @@ my $white = $im->colorAllocate($color,$color,$color);
 push(@colors, $white);
 for (my $i = 1; $i <= $steps; $i++){
   $color -= int(255/$steps);
-  print "color: $color\n";
   push(@colors, $im->colorAllocate($color, $color, $color));
 }
+print "colors: " . join(',',@colors) . "\n";
 my $black = $im->colorAllocate(0,0,0);
 
 open (PNG, ">out.png");
