@@ -100,9 +100,9 @@ sub color_index { #choose a color shade based on max, min,
   return 0;
 }
 
-for (my $r = 0; $r < $row_count; $r++) {
-   for (my $c = 0; $c < $col_count; $c++) {
-     $im->setPixel($r, $c, $colors[color_index($min,$max,$data[$r][$c])]);
+for (my $c = 0; $c < $col_count; $c++) {
+   for (my $r = 0; $r < $row_count; $r++) {
+     $im->setPixel($c, $row_count - $r, $colors[color_index($min,$max,$data[$r][$c])]);
    }
 }
 
