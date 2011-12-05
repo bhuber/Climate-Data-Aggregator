@@ -5,11 +5,24 @@ use Getopt::Std;
 use GD;
 use Data::Dumper;
 
+sub usage {
+  print<<EOUSAGE
+grid.pl  this program reads in an ascii grid and processes it, spitting out an image (and maybe eventually a NetCDF file)
+ -?  help
+ -s  number of steps for coloring the graph 1-255
+ -r  number of rows expected (used for validating only)
+ -c  number of cols expected (used for validating only)
+ -f  file to read in
+
+Requires GD for image creation ( sudo apt-get install libgd-gd2-perl )
+EOUSAGE
+}
 
 
 my %opts;
-getopts('x:s:r:c:f:', \%opts);
+getopts('?x:s:r:c:f:', \%opts);
 
+usage() && exit if $opts{'?'};
 my $file = $opts{'f'} || 'data';
 my $num_rows = $opts{'r'} || 99999;
 my $num_cols = $opts{'c'} || 99999;

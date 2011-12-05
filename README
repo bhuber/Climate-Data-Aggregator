@@ -1,25 +1,26 @@
 We're working on the rhok.org project for the worldbank
+Problem definition: http://www.rhok.org/problems/web-based-interface-tabulating-daily-global-climate-dataset-0
 
 Project manager:
 Hrishi Patel
+Github handle: hppatel
 hrishi.p.patel@gmail.com
 
-Github Project Admin
-Bennet Huber
-Azavea
-bhuber@azavea.com
+Status as of 2:00 AM 12/5/2011
 
-Status as of 9:00 AM 12/4/2011
-
+Some useful knowledge we've gained:
  - Can import data into sqlite db, but only one file at a time and it needs to be unzipped first
  - SQLite DB grows at a rate of approx. 10 MB per day of data imported without indices
  - Have prototype web interface, but it's extremely basic and will probably not work in practice (can't use it to get lat-long easily for instance)
  - Tried using PostGreSQL instead of sqlite, works but appears to be much slower, at least on Amir's machine with default settings
 
-Tasks for today:
+Next steps:
  - Get web version up and running.  For now, all we need is a google map we can click on that will pass lat-long back to the server
  - Get a REST endpoint up and running for the server that accepts above lat-long requests and returns all the data available for that point
- - Add a function to dbinterface.py to query the DB by lat-long
- - Write a script to walk through the zipped files, unzip them, then import their contents into the DB (could be a few separate scripts)
  - Import 6 years of data into the DB
 
+Data:
+ - Unfortunately, the data is 13 GB of zipped ASCII files, so it's not easy to distribute.  
+ 	Several of the committers for this project have copies though.  If you would like to get 
+	a copy, please contact one of us.  Samples of the unzipped data files can be found in
+	/data/test/ .

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#TODO: Replace this code as soon as possible, we're technically in violation of copyright simply having this on GitHub
 #Copyright Jon Berg , turtlemeat.com
 
 import string,cgi,time,json

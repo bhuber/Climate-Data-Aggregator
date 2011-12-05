@@ -52,7 +52,7 @@ class ClimateGridInterface:
 
 	# TODO: implement this
 	_retrieve_statement = """
-		SELECT * FROM ClimateGrid WHERE """
+		SELECT * FROM ClimateGrid WHERE Row = ? AND Col = ?"""
 
 	def round_to_nearest_half(self, x):
 		return round(2 * x) / 2
@@ -66,11 +66,11 @@ class ClimateGridInterface:
 			return None
 		lat = self.round_to_nearest_half(lat)
 		lng = self.round_to_nearest_half(lng)
-		row = (lat + 90) * _nrows / 180
-		col = (lng + 180) * _ncols / 360
-		row = int(row) % _nrows
-		col = int(col) % _ncols
-		return (row, col)
+		row = (90 - lat) * self._nrows / 180
+		col = (lng + 180) * self._ncols / 360
+		row = int(2 * row) % self._nrows
+		col = int(2 * col) % self._ncols
+		return (col, row)
 
 	def index_to_sequence(self, row, col):
 		"""
@@ -80,15 +80,13 @@ class ClimateGridInterface:
 
 	def import_files(self, fa, fb, fc, year, month, day, doy):
 		for i in xrange(len(fa)):
-			if -999 in (fa[i],fb[i],fc[i]):
-				continue
-			row, col = int(i/360),i%720
-			precip = None
-			min_temp = None
-			max_temp = None
+			row, col = int(i / 720), i % 720
 			precip = fa[i]
 			min_temp = fb[i]
 			max_temp = fc[i]
+			if precip == -999: precip = None
+			if min_temp == -999: min_temp = None
+			if max_temp == -999: max_temp = None
 			date = "%04d%02d%02d" % (year, month, day)
 			insert_data = (row, col, precip, min_temp, max_temp, i, date)
 			self.insert_row(insert_data)
@@ -97,10 +95,25 @@ class ClimateGridInterface:
 	   self.curs.execute(self._insert_statement, data)
 	   
 	def retrieve_row(self, data):
+		"""
+		Gets all entries for a given location
+		@param data:dictionary with x and y in degrees
+		@returns: an array of rows
+		"""
 		#Uncomment this when this is done
-		#result = self.curs.execute(self._retrieve_statement, data)
-		print data
-		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
+		#print(data)
+		lat = data['y']
+		lng = data['x']
+		result = []
+		params = self.latlng_to_rowcol(lat, lng)
+
+		if params is not None:
+			#print(params)
+			rows = self.curs.execute(self._retrieve_statement, params)
+			result = rows.fetchall()
+			#print(result)
+#		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
+
 		return result
 	
 	

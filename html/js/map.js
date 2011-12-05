@@ -40,15 +40,22 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
         }
 
         var rect = geoToRect(lonlat);
-        $("#rectcoords").html("col: " + rect.col + ", row: " + rect.row);
+        // $("#rectcoords").html("col: " + rect.col + ", row: " + rect.row);
 
         console.log(rect);
 
         var q = '[row=' + rect.row + ',col=' + rect.col + ']';
         cloudmine.search(q, function(data){
-            $("#results").html("");
+            var table = $("#results table");
+            table.html("");
+            table.append("<tr><th>Precipitation</th><th>Min Temp</th><th>Max Temp</th>" +
+                         "<th>Year</th><th>Month</th><th>Day</th></tr>");
             data.success.forEach(function(key, value){
-                $("#results").append("<div>" + JSON.stringify(value) + "</div>");
+                //$("#results").append("<div>" + JSON.stringify(value) + "</div>");
+
+                table.append("<tr><td>" + value.precip + "</td><td>" + value.mint + "</td>"
+                             + "<td>"+ value.maxt + "</td><td>" + value.year + "</td>"
+                             + "<td>"+ value.month + "</td><td>"+ value.day + "</td></tr>");
             });
         });
     }
@@ -71,6 +78,7 @@ function init(){
     map.addControl(new OpenLayers.Control.LayerSwitcher());
     // map.setCenter(new OpenLayers.LonLat(0, 0), 0);
     map.zoomToMaxExtent();
+    map.zoomIn();
     
     var click = new OpenLayers.Control.Click();
     map.addControl(click);
