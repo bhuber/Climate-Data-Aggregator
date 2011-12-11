@@ -20,6 +20,7 @@ class ClimateGridInterface(object):
 		self.curs = self.conn.cursor()
 		try:
 			self.curs.execute(self._create_statement)
+			print("Successfully created new database!")
 		except sqlite3.OperationalError:
 			# table already exists, we don't need to do anything
 			pass
@@ -50,7 +51,10 @@ class ClimateGridInterface(object):
 		VALUES (?, ?, ?, ?, ?, ?, ?)"""
 
 	_get_rows_by_xy_sql = """
-		SELECT Precip, Min_T, Max_T, Date FROM ClimateGrid WHERE Row = ? AND Col = ?"""
+		SELECT Precip, Min_T, Max_T, Date FROM ClimateGrid 
+			WHERE Row = ? AND Col = ?
+			ORDER BY Date
+		"""
 
 	def round_to_nearest_half(self, x):
 		return round(2 * x) / 2
@@ -99,7 +103,7 @@ class ClimateGridInterface(object):
 			if precip is None and min_temp is None and max_temp is None:
 				continue
 
-			date = "%04d%02d%02d" % (year, month, day)
+			date = str("%04d%02d%02d" % (year, month, day))
 			insert_data = (row, col, precip, min_temp, max_temp, i, date)
 			self.insert_row(insert_data)
 
@@ -111,6 +115,7 @@ class ClimateGridInterface(object):
 		Gets all entries for a given location
 		@param data:dictionary with x and y in degrees
 		@returns: an array of rows, or [] if none are found
+		Row values are [Precip, Min_T, Max_T, Date]
 		"""
 		#Uncomment this when this is done
 		#print(data)
