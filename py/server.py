@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#TODO: Replace this code as soon as possible, we're technically in violation of copyright simply having this on GitHub
 #Copyright Jon Berg , turtlemeat.com
 
 import string,cgi,time,json
@@ -30,7 +29,7 @@ class MyHandler(BaseHTTPRequestHandler):
 				self.send_response(200)
 				self.send_header('Content-type',	'text/html')
 				self.end_headers()
-				self.wfile.write(json.dumps(dbinterface.ClimateGridInterface().retrieve_row(data)))
+				self.wfile.write(json.dumps(dbinterface.ClimateGridInterface().get_row_by_xy(data)))
 				return
 			
 			return

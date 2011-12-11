@@ -1,9 +1,10 @@
 #Defines an interface to our database
+# -*- coding: utf-8 -*-
 
 from pysqlite2 import dbapi2 as sqlite3
 import datetime
 
-class ClimateGridInterface:
+class ClimateGridInterface(object):
 	"""
 	Defines some interface methods for our ClimateGrid table
 	Automatically connects to the db upon creation and creates the necessary tables
@@ -12,13 +13,11 @@ class ClimateGridInterface:
 	conn = None	 #db connection
 	curs = None	 #cursor for connection
 
-	def __init__(self):
-	#Docs for pysqlite: http://pysqlite.googlecode.com/svn/doc/sqlite3.html
-		self.conn = sqlite3.connect("./testdb.sqlite")
+	def __init__(self, dbname="./testdb.sqlite"):
+		#Docs for pysqlite: http://pysqlite.googlecode.com/svn/doc/sqlite3.html
+		self.conn = sqlite3.connect(dbname)
 		self.conn.isolation_level = "DEFERRED"
 		self.curs = self.conn.cursor()
-		#TODO: test for existence of our db, create only if necessary
-		#Using try/except.
 		try:
 			self.curs.execute(self._create_statement)
 		except sqlite3.OperationalError:
@@ -50,9 +49,8 @@ class ClimateGridInterface:
 		INSERT INTO ClimateGrid (Row, Col, Precip, Min_T, Max_T, Seq, Date)
 		VALUES (?, ?, ?, ?, ?, ?, ?)"""
 
-	# TODO: implement this
-	_retrieve_statement = """
-		SELECT * FROM ClimateGrid WHERE Row = ? AND Col = ?"""
+	_get_rows_by_xy_sql = """
+		SELECT Precip, Min_T, Max_T, Date FROM ClimateGrid WHERE Row = ? AND Col = ?"""
 
 	def round_to_nearest_half(self, x):
 		return round(2 * x) / 2
@@ -76,17 +74,31 @@ class ClimateGridInterface:
 		"""
 		Converts a (row, col) index to a sequence number
 		"""
-		return col * 720 + row
+		return row * self._ncols + col
 
-	def import_files(self, fa, fb, fc, year, month, day, doy):
-		for i in xrange(len(fa)):
-			row, col = int(i / 720), i % 720
-			precip = fa[i]
-			min_temp = fb[i]
-			max_temp = fc[i]
+	def import_files(self, f_precip, f_mint, f_maxt, year, month, day, doy):
+		"""
+		Imports one day's worth of information
+		year, month, day are all 1 based
+		@param f_precip: file data for precipiation (one dimensional array of floats)
+		@param f_mint: file data for min temperature (one dimensional array of floats)
+		@param f_maxt: file data for max temperature  (one dimensional array of floats)
+		@param year: year of the data we're importing
+		@param month: month of the data we're importing
+		@param day: day of the data we're importing
+		@param doy: day of year of the data we're importing (1 - 366)
+		"""
+		for i in xrange(len(f_precip)):
+			row, col = int(i / self._ncols), i % self._ncols
+			precip = f_precip[i]
+			min_temp = f_mint[i]
+			max_temp = f_maxt[i]
 			if precip == -999: precip = None
 			if min_temp == -999: min_temp = None
 			if max_temp == -999: max_temp = None
+			if precip is None and min_temp is None and max_temp is None:
+				continue
+
 			date = "%04d%02d%02d" % (year, month, day)
 			insert_data = (row, col, precip, min_temp, max_temp, i, date)
 			self.insert_row(insert_data)
@@ -94,11 +106,11 @@ class ClimateGridInterface:
 	def insert_row(self, data):
 	   self.curs.execute(self._insert_statement, data)
 	   
-	def retrieve_row(self, data):
+	def get_row_by_xy(self, data):
 		"""
 		Gets all entries for a given location
 		@param data:dictionary with x and y in degrees
-		@returns: an array of rows
+		@returns: an array of rows, or [] if none are found
 		"""
 		#Uncomment this when this is done
 		#print(data)
@@ -109,7 +121,7 @@ class ClimateGridInterface:
 
 		if params is not None:
 			#print(params)
-			rows = self.curs.execute(self._retrieve_statement, params)
+			rows = self.curs.execute(self._get_rows_by_xy_sql, params)
 			result = rows.fetchall()
 			#print(result)
 #		result = (10, 44, 0.0, 3.265, 8.458, 364, 2006, 12, 30)
