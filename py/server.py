@@ -29,7 +29,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 raise(Exception("Sorry, can't read files on my compy"))
 
                 f = open(curdir + sep + self.path) #self.path has /test.html
-                                #note that this potentially makes every file on your computer readable by the internet
+                #note that this potentially makes every file on your computer readable by the internet
 
                 self.send_response(200)
                 self.send_header('Content-type',        'text/html')
@@ -69,7 +69,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(result);
                 return
-                    
+
             else:
                 self.wfile.write("404: FileNotFound!")
                 self.send_error(404,'File Not Found: %s' % self.path)
@@ -80,7 +80,7 @@ class MyHandler(BaseHTTPRequestHandler):
         except Exception:
             self.wfile.write("500: Internal Server Error!")
             self.send_error(500,'Internal Server Error: %s' % self.path)
-            
+
 
 
     def do_POST(self):
@@ -111,3 +111,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

@@ -37,7 +37,7 @@ class ClimateGridInterface:
     @staticmethod
     def latlng_to_rowcol(lat, lng):
         """
-        Given latitude and longitude returns (row, col) for grid 
+        Given latitude and longitude returns (row, col) for grid
         or None if out of bounds
         """
         if lat < -90 or lat > 90 or lng < -180 or lng > 180:
@@ -50,7 +50,7 @@ class ClimateGridInterface:
         col = int(col) % ncols
         return (row, col)
 
-        
+
 
 class Helper:
     @staticmethod
@@ -62,7 +62,7 @@ class Helper:
 
     @staticmethod
     def rand_temp():
-        """Returns a random temperature 
+        """Returns a random temperature
         """
         return random.randint(-30, 110) + random.random();
 
@@ -120,5 +120,3 @@ c = conn.cursor()
 print(c.execute("SELECT * FROM ClimateGrid WHERE Row = 80 AND Col = 135").fetchall())
 
 conn.close()
-
-
