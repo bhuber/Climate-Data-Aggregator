@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Climate Data Aggregator</title>
+        <script src="js/jquery-1.7.1.min.js"></script>
+        <script src="js/cloudmine.js"></script>
+        <script src="js/OpenLayers-2.11/OpenLayers.js"></script>
+        <script src="js/map.js"></script>
+    </head>
+
+    <body onload="init()">
+	<center>
+	<h1>Climate Data Aggregator UI</h1>
+	<div id="container" style="width:720px; height:360px; border:solid #666 1px; position:relative;">
+      <div id="map"></div>
+
+	<!-- 	<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/09/BlankMap-World-v2.png/1024px-BlankMap-World-v2.png" width="100%" height="100%" alt="map" /> -->
+
+	<!-- 	<div id="container" style="width:720px; height:360px; border:solid #666 1px; position:absolute; left:0; top:0; border:1px #0f0 solid;" onmousedown="mapMouseDown();" onmousemove="mapMouseMove();" onmouseup="mapMouseUp();" onmouseover="this.focus()"> -->
+	<!-- 		<div id="pushpin" style="position:absolute; left:0; top:0; display:none; border:1px #f00 solid; background-color:rgba(255,0,0,.4); width:20px; height:20px;"> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+	<!-- </div> -->
+	<div id="resultscontainer">
+	  <div id="resultHeading">Select a region.</div>
+	  <div id="coords"></div>
+      <div id="rectcoords"></div>
+      <div id="results">
+        <table border=1>
+        </table>
+      </div>
+	</div>
+	</center>
+    </body>
+</html>
