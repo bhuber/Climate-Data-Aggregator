@@ -3,6 +3,7 @@
 
 from pysqlite2 import dbapi2 as sqlite3
 import datetime
+import pdb
 
 class ClimateGridInterface(object):
     """
@@ -13,7 +14,7 @@ class ClimateGridInterface(object):
     conn = None      #db connection
     curs = None      #cursor for connection
 
-    def __init__(self, dbname="./testdb.sqlite"):
+    def __init__(self, dbname="./py/testdb.sqlite"):
         #Docs for pysqlite: http://pysqlite.googlecode.com/svn/doc/sqlite3.html
         self.conn = sqlite3.connect(dbname)
         self.conn.isolation_level = "DEFERRED"
@@ -72,7 +73,7 @@ class ClimateGridInterface(object):
         col = (lng + 180) * self._ncols / 360
         row = int(2 * row) % self._nrows
         col = int(2 * col) % self._ncols
-        return (col, row)
+        return (row, col)
 
     def index_to_sequence(self, row, col):
         """

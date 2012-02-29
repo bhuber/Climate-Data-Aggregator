@@ -6,9 +6,10 @@
 import string,cgi,time,json
 import dbinterface
 from os import curdir, sep
+import os
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import re
-#import pri
+import pdb
 
 floatx = '[-+]?[0-9]*\\.?[0-9]+'
 
@@ -24,33 +25,13 @@ class MyHandler(BaseHTTPRequestHandler):
         print(self.path)
         try:
             matches = self._grid_matcher.match(self.path)
-            if self.path.endswith(".html"):
-                #I really don't want people reading my machine....
-                raise(Exception("Sorry, can't read files on my compy"))
 
-                f = open(curdir + sep + self.path) #self.path has /test.html
-                #note that this potentially makes every file on your computer readable by the internet
-
-                self.send_response(200)
-                self.send_header('Content-type',        'text/html')
-                self.end_headers()
-                self.wfile.write(f.read())
-                f.close()
-                return
-            elif "?" in self.path:   #our dynamic content
-                # safe eval: restrict all namespaces to prevent url injection
-                data = eval("{'"+",'".join(self.path.split("?")[-1].split("&")).replace("=","':")+"}",{"__builtins__":None},{})
-                self.send_response(200)
-                self.send_header('Content-type',        'text/html')
-                self.end_headers()
-                self.wfile.write(json.dumps(dbinterface.ClimateGridInterface().get_row_by_xy(data)))
-                return
-
-            elif matches is not None:
+            if matches is not None:
                 lat = matches.group("lat")
                 lng = matches.group("lng")
                 print(lat, lng)
                 xy = { 'x': float(lng), 'y': float(lat) }
+                #pdb.set_trace()
                 rows = self.dbi.get_row_by_xy(xy)
                 result = dict()
                 data = []
@@ -67,12 +48,32 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
-                self.wfile.write(result);
+                self.wfile.write(json.dumps(result));
+                return
+
+            elif "?" in self.path:   #our dynamic content
+                # safe eval: restrict all namespaces to prevent url injection
+                data = eval("{'"+",'".join(self.path.split("?")[-1].split("&")).replace("=","':")+"}",{"__builtins__":None},{})
+                self.send_response(200)
+                self.send_header('Content-type',        'text/html')
+                self.end_headers()
+                self.wfile.write(json.dumps(dbinterface.ClimateGridInterface().get_row_by_xy(data)))
                 return
 
             else:
-                self.wfile.write("404: FileNotFound!")
-                self.send_error(404,'File Not Found: %s' % self.path)
+                #I really don't want people reading my machine....
+                #raise(Exception("Sorry, can't read files on my compy"))
+
+                ext = os.path.splitext(self.path)[1][1:]
+                f = open(curdir + sep + self.path)
+                #note that this potentially makes every file on your computer readable by the internet
+
+                self.send_response(200)
+                self.send_header('Content-type', 'text/' + ext)
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
+                return
 
         except IOError:
             self.wfile.write("404: FileNotFound!")
