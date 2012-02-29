@@ -70,9 +70,11 @@ class ClimateGridInterface(object):
         lat = self.round_to_nearest_half(lat)
         lng = self.round_to_nearest_half(lng)
         row = (90 - lat) * self._nrows / 180
-        col = (lng + 180) * self._ncols / 360
-        row = int(2 * row) % self._nrows
-        col = int(2 * col) % self._ncols
+        col = (lng + 360) * self._ncols / 360
+        row = int(row) % self._nrows
+        col = int(col) % self._ncols
+        row = self._nrows - row;
+        print (row, col)
         return (row, col)
 
     def index_to_sequence(self, row, col):
@@ -123,7 +125,7 @@ class ClimateGridInterface(object):
         lat = data['y']
         lng = data['x']
         result = []
-        params = self.latlng_to_rowcol(lat, lng)
+        params = self.latlng_to_rowcol(lng, lat)
 
         if params is not None:
             #print(params)

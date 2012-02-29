@@ -108,9 +108,9 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
             for(var i = 0, len = rows.length; i < len; i++) {
                 var value = rows[i], 
                     date = value[date_idx], 
-                    day = date.substr(0, 2),
-                    month = date.substr(2, 2),
-                    year = date.substr(4, 4);
+                    year = date.substr(0, 4);
+                    month = date.substr(4, 2),
+                    day = date.substr(6, 2),
                 table.append("<tr><td>" + value[precip_idx] + "</td><td>" + value[mint_idx] + "</td>"
                      + "<td>"+ value[maxt_idx] + "</td><td>" + year + "</td>"
                      + "<td>"+ month + "</td><td>"+ day + "</td></tr>");
